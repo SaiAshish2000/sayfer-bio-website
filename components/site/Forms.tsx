@@ -262,6 +262,9 @@ export function DataForm({
       companyWebsiteRef: String(data.get("companyWebsiteRef") ?? ""),
       consent: Boolean(data.get("consent")),
     };
+    if (updates) {
+  payload.updates = Boolean(data.get("updates"));
+}
     for (const f of fields) {
       payload[f.name] =
         f.type === "checkboxes"

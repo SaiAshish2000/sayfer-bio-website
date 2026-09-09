@@ -1,0 +1,76 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+# ...but the template of NAMES ONLY is meant to be committed.
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+# local AI / tooling
+.claude/
+.playwright-cli/
+
+# QA artifacts
+artifacts/
+
+# private / working references
+references/
+PITCH SCREEN SHOTS/
+sayfer bio webdesign context/
+
+# source/business documents not required by production site
+Sayfer_Bio-PreSeed-Pitch.key
+Sayfer_Bio_Website_Content_Document.docx
+
+# old working backups
+CLAUDE.v1-backup.md
+DESIGN.v1-backup.md
+# internal project / pitch material
+/PITCH SCREEN SHOTS/
+/Sayfer_Bio-PreSeed*Pitch.key
+
+# AI development instructions / local tooling metadata
+/CLAUDE.md
+/AGENTS.md
+/skills-lock.json
+# remaining internal project material
+/PITCH SCREEN SHOTS/
+/Sayfer_Bio_PreSeed_Pitch.key
+/skills-lock.json
+# Blender source / working files
+/assets/blender/

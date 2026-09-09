@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+/*
+  Sayfer Bio - V2 design tokens.
+  Warm near-black ground, ivory foreground, ONE biological green accent.
+  Stainless tones live only in the 3D layer. A warm amber is reserved for the
+  Our Scaffold biomaterial and is not used as UI chrome elsewhere.
+*/
+@theme {
+  --color-void: #070908;
+  --color-ground: #0a0c0b;
+  --color-ground-raised: #10130f;
+  --color-hairline: rgba(244, 242, 236, 0.12);
+  --color-hairline-strong: rgba(244, 242, 236, 0.24);
+
+  --color-ivory: #f4f2ec;
+  --color-mist: #b9beb7;
+  --color-muted: #7d857c;
+  --color-faint: #545a52;
+
+  --color-accent: #5f9d6e;
+  --color-accent-bright: #74b884;
+  --color-accent-deep: #2f5c3d;
+
+  --color-amber: #d8a24a;
+  --color-amber-deep: #a9762b;
+
+  --color-chip: #f6f4ee;
+
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-void);
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-ivory);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-accent-deep);
+  color: var(--color-ivory);
+}
+
+/* Compact technical label. Used sparingly (max ~1 per 3 sections). */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* Editorial display statement. */
+.statement {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+/* Readable prose column. */
+.measure {
+  max-width: 66ch;
+}
+
+.prose-body p + p {
+  margin-top: 1.15em;
+}
+.prose-body p {
+  color: var(--color-mist);
+  line-height: 1.7;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-bright);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Fixed film grain. pointer-events-none, never on a scroll container. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   About page ambient cell drift.
+
+   Two nested groups animate independently on X and Y with deliberately
+   mismatched, non-harmonic durations, so the combined path wanders instead of
+   tracing a visible loop or a shared rhythm. Amplitudes are a few SVG user
+   units — enough to feel alive, far too small to carry a cell anywhere near
+   running text. CSS-only, so the fields stay server-rendered with no JS.
+--------------------------------------------------------------------------- */
+@keyframes sfDriftX {
+  0%   { transform: translateX(0); }
+  22%  { transform: translateX(var(--sf-dx)); }
+  47%  { transform: translateX(calc(var(--sf-dx) * -0.72)); }
+  71%  { transform: translateX(calc(var(--sf-dx) * 0.44)); }
+  88%  { transform: translateX(calc(var(--sf-dx) * -0.25)); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes sfDriftY {
+  0%   { transform: translateY(0); }
+  29%  { transform: translateY(calc(var(--sf-dy) * -0.85)); }
+  53%  { transform: translateY(var(--sf-dy)); }
+  76%  { transform: translateY(calc(var(--sf-dy) * -0.4)); }
+  100% { transform: translateY(0); }
+}
+
+.sf-drift-x {
+  animation: sfDriftX var(--sf-tx) ease-in-out infinite;
+  animation-delay: var(--sf-delay-x);
+  will-change: transform;
+}
+
+.sf-drift-y {
+  animation: sfDriftY var(--sf-ty) ease-in-out infinite;
+  animation-delay: var(--sf-delay-y);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-drift-x,
+  .sf-drift-y {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   V5 intro overlay.
+
+   Visibility is decided before first paint by the inline script in the root
+   layout, which sets `data-intro` on <html> from sessionStorage. Driving it
+   from CSS rather than from React state is what prevents both flashes: a
+   returning visitor never sees the overlay mount, and a first visitor never
+   sees the site before it.
+--------------------------------------------------------------------------- */
+.intro-overlay {
+  display: none;
+}
+
+[data-intro="running"] {
+  /* Scroll is locked on the element that actually scrolls. Released, along
+     with this attribute, when the intro finishes or is skipped. */
+  overflow: hidden;
+}
+
+[data-intro="running"] .intro-overlay {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+/* The header logo is the flight's landing target, so it stays hidden until the
+   intro's own mark has arrived on top of it — otherwise both are briefly
+   visible and the handoff reads as two logos rather than one. */
+[data-intro="running"] header a[aria-label] img {
+  opacity: 0;
+}
+
+.intro-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--color-void);
+}
+
+.intro-stage {
+  position: absolute;
+  transform: translateZ(0);
+}
+
+.intro-stage canvas,
+.intro-stage img {
+  transform-origin: top left;
+  will-change: transform, opacity;
+}
+
+/* The stage is a zero-size anchor point, and preflight's `img{max-width:100%}`
+   resolves against it — which collapses both images to nothing. They are sized
+   explicitly in px by the layout pass, so opt them out. */
+.intro-stage img {
+  max-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-stage canvas {
+    display: none;
+  }
+}
